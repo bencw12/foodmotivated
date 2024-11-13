@@ -4,16 +4,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
-public class SellingBinPrice {
+public class SellingBinOffer {
     private final ItemStack item;
     private final double multiplier;
 
-    public SellingBinPrice(CompoundTag tag) {
+    public SellingBinOffer(CompoundTag tag) {
         this.item = ItemStack.of(tag.getCompound("item"));
         this.multiplier = tag.getDouble("multiplier");
     }
 
-    public SellingBinPrice(ItemStack item, double multiplier) {
+    public SellingBinOffer(ItemStack item, double multiplier) {
         this.item = item;
         this.multiplier = multiplier;
     }
@@ -33,7 +33,7 @@ public class SellingBinPrice {
         buf.writeDouble(this.multiplier);
     }
 
-    public int getPrice() {
+    public int getOffer() {
         return Math.max(1, (int)(((float) this.item.getFoodProperties(null).getNutrition()) * this.multiplier));
     }
 }

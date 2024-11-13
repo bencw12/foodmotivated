@@ -4,12 +4,12 @@ import io.github.bencw12.sellingbin.block.SellingBinBlocks;
 import io.github.bencw12.sellingbin.blockentity.SellingBinBlockEntities;
 import io.github.bencw12.sellingbin.client.renderer.blockentity.SellingBinBlockEntityRenderer;
 import io.github.bencw12.sellingbin.data.SellingBinDataManager;
-import io.github.bencw12.sellingbin.data.SellingBinPricesSavedData;
+import io.github.bencw12.sellingbin.data.SellingBinOffersSavedData;
 import io.github.bencw12.sellingbin.gui.SellingBinGui;
 import io.github.bencw12.sellingbin.gui.screens.inventory.SellingBinScreen;
 import io.github.bencw12.sellingbin.item.SellingBinItems;
 import io.github.bencw12.sellingbin.network.SellingBinPacketHandler;
-import io.github.bencw12.sellingbin.world.item.SellingBinPrices;
+import io.github.bencw12.sellingbin.world.item.SellingBinOffers;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -51,7 +51,7 @@ public class SellingBin
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
-    public static SellingBinPricesSavedData PRICES_SAVE;
+    public static SellingBinOffersSavedData OFFERS_SAVE;
 
 
     public SellingBin(FMLJavaModLoadingContext context)
@@ -91,11 +91,11 @@ public class SellingBin
             LOGGER.info(MOD_NAME + ": server starting");
             for (ServerLevel world : event.getServer().getAllLevels()) {
                 if (world.dimension() == Level.OVERWORLD) {
-                    LOGGER.info(MOD_NAME + ": loading selling bin prices");
-                    PRICES_SAVE = SellingBinDataManager.getPrices(world);
+                    LOGGER.info(MOD_NAME + ": loading selling bin offers");
+                    OFFERS_SAVE = SellingBinDataManager.getOffers(world);
 
-                    if (PRICES_SAVE.getPrices().isEmpty()) {
-                        SellingBinPrices.getNewPrices();
+                    if (OFFERS_SAVE.getOffers().isEmpty()) {
+                        SellingBinOffers.getNewOffers();
                     }
                 }
             }
@@ -104,7 +104,7 @@ public class SellingBin
         @SubscribeEvent
         public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer player) {
-                SellingBinDataManager.sendPricesToClient(player);
+                SellingBinDataManager.sendOffersToClient(player);
             }
         }
 
@@ -116,14 +116,14 @@ public class SellingBin
                     long time = serverLevel.getDayTime() % 24000;
 
                     if (lastTick > time) {
-                        SellingBinPrices.getNewPrices();
+                        SellingBinOffers.getNewOffers();
                     }
 
                     lastTick = time;
 
                     // send to all players
                     for (ServerPlayer player : serverLevel.players()) {
-                        SellingBinDataManager.sendPricesToClient(player);
+                        SellingBinDataManager.sendOffersToClient(player);
                     }
                 }
             }

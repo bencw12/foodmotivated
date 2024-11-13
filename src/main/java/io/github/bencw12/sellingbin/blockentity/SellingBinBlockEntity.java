@@ -2,7 +2,7 @@ package io.github.bencw12.sellingbin.blockentity;
 
 import io.github.bencw12.sellingbin.gui.inventory.SellingBinMenu;
 import io.github.bencw12.sellingbin.item.SellingBinItems;
-import io.github.bencw12.sellingbin.world.item.SellingBinPrices;
+import io.github.bencw12.sellingbin.world.item.SellingBinOffers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -292,7 +292,7 @@ public class SellingBinBlockEntity extends BlockEntity implements Container, Men
         for (int i = 0; i < this.getItems().size(); i++) {
             ItemStack stack = this.getItems().get(i);
 
-            int cost = SellingBinPrices.getPrice(stack);
+            int cost = SellingBinOffers.getEmeraldTotal(stack);
 
             if (cost > 0) {
                 this.setItem(i, ItemStack.EMPTY);

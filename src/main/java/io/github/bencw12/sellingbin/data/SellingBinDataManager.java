@@ -1,21 +1,21 @@
 package io.github.bencw12.sellingbin.data;
 
 import io.github.bencw12.sellingbin.network.SellingBinPacketHandler;
-import io.github.bencw12.sellingbin.network.packet.SellingBinPricesPacket;
-import io.github.bencw12.sellingbin.world.item.SellingBinPrices;
+import io.github.bencw12.sellingbin.network.packet.SellingBinOffersPacket;
+import io.github.bencw12.sellingbin.world.item.SellingBinOffers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.PacketDistributor;
 
 public class SellingBinDataManager {
-    private static final String PRICES_KEY = "selling_bin_prices";
+    private static final String OFFERS_KEY = "selling_bin_offers";
 
-    public static SellingBinPricesSavedData getPrices(ServerLevel world) {
-        return world.getDataStorage().computeIfAbsent(SellingBinPricesSavedData::load, SellingBinPricesSavedData::new, PRICES_KEY);
+    public static SellingBinOffersSavedData getOffers(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(SellingBinOffersSavedData::load, SellingBinOffersSavedData::new, OFFERS_KEY);
     }
 
-    public static void sendPricesToClient(ServerPlayer player) {
-        SellingBinPricesPacket pkt = new SellingBinPricesPacket(SellingBinPrices.PRICES);
+    public static void sendOffersToClient(ServerPlayer player) {
+        SellingBinOffersPacket pkt = new SellingBinOffersPacket(SellingBinOffers.OFFERS);
         SellingBinPacketHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), pkt);
     }
 }

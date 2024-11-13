@@ -1,8 +1,7 @@
 package io.github.bencw12.sellingbin.network;
 
 import io.github.bencw12.sellingbin.SellingBin;
-import io.github.bencw12.sellingbin.network.packet.SellingBinPricesPacket;
-import net.minecraft.network.protocol.game.ClientboundMerchantOffersPacket;
+import io.github.bencw12.sellingbin.network.packet.SellingBinOffersPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -19,8 +18,8 @@ public class SellingBinPacketHandler {
     private static int index;
 
     public static synchronized void register() {
-        CHANNEL.registerMessage(index++, SellingBinPricesPacket.class,
-                SellingBinPricesPacket::encode, SellingBinPricesPacket::decode,
-                SellingBinPricesPacket::handle);
+        CHANNEL.registerMessage(index++, SellingBinOffersPacket.class,
+                SellingBinOffersPacket::encode, SellingBinOffersPacket::decode,
+                SellingBinOffersPacket::handle);
     }
 }

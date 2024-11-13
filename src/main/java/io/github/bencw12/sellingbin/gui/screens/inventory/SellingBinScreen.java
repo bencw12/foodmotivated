@@ -3,8 +3,8 @@ package io.github.bencw12.sellingbin.gui.screens.inventory;
 import io.github.bencw12.sellingbin.SellingBin;
 import io.github.bencw12.sellingbin.gui.inventory.SellingBinMenu;
 import io.github.bencw12.sellingbin.item.SellingBinItems;
-import io.github.bencw12.sellingbin.world.item.SellingBinPrice;
-import io.github.bencw12.sellingbin.world.item.SellingBinPrices;
+import io.github.bencw12.sellingbin.world.item.SellingBinOffer;
+import io.github.bencw12.sellingbin.world.item.SellingBinOffers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,8 +28,8 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(SellingBin.MOD_ID, "textures/gui/selling_bin.png");
     private static final int TEXT_COLOR = 0x404040;
-    private static final int PRICES_X = 6;
-    private static final int PRICES_Y = 6;
+    private static final int OFFERS_X = 6;
+    private static final int OFFERS_Y = 6;
     private static final int TITLE_X = 74;
     private static final int TITLE_Y = 6;
     private static final int INVENTORY_X = 74;
@@ -39,7 +39,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
     private static final int TEXTURE_HEIGHT = 256;
     private static final int SCROLL_Y = 168;
     private static final int SCROLL_WIDTH = 6;
-    private static final int MAX_PRICE_BOXES = 7;
+    private static final int MAX_OFFER_BOXES = 7;
     private static final int SCROLL_BAR_HEIGHT = 140;
     private static final int SCROLL_BAR_X = 60;
     private static final int SCROLL_BAR_Y = 18;
@@ -68,11 +68,11 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics gui, int mouseX, int mouseY) {
-        // prices window
+        // offers window
         gui.drawString(this.font,
-                Component.translatable("block.selling_bin.prices"),
-                PRICES_X,
-                PRICES_Y,
+                Component.translatable("block.selling_bin.offers"),
+                OFFERS_X,
+                OFFERS_Y,
                 TEXT_COLOR,
                 false);
         // title
@@ -92,12 +92,12 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
                 false);
     }
 
-    private int getNumPrices() {
-        return SellingBinPrices.PRICES.size();
+    private int getNumOffers() {
+        return SellingBinOffers.OFFERS.size();
     }
 
     private void renderScroller(GuiGraphics gui, int x, int y) {
-        int i = getNumPrices() - MAX_PRICE_BOXES;
+        int i = getNumOffers() - MAX_OFFER_BOXES;
         if (i > 1) {
             int j = (SCROLL_BAR_HEIGHT - 1) - (SCROLL_BUTTON_HEIGHT + (i - 1) * (SCROLL_BAR_HEIGHT - 1) / i);
             int k = 1 + j / i + (SCROLL_BAR_HEIGHT - 1) / i;
@@ -127,8 +127,8 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
 
         ArrayList<OfferListing> offers = new ArrayList<>();
 
-        for (SellingBinPrice p : SellingBinPrices.PRICES) {
-            if (!this.canScroll() || offset >= this.scrollOff && offset < MAX_PRICE_BOXES + this.scrollOff) {
+        for (SellingBinOffer p : SellingBinOffers.OFFERS) {
+            if (!this.canScroll() || offset >= this.scrollOff && offset < MAX_OFFER_BOXES + this.scrollOff) {
                 OfferListing offer = new OfferListing(guiX, offerY, offset, this.font, p);
                 offers.add(offer);
                 offer.render(gui, x, y, a);
@@ -147,7 +147,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
     @OnlyIn(Dist.CLIENT)
     static class OfferListing extends AbstractWidget {
         final int index;
-        final SellingBinPrice price;
+        final SellingBinOffer offer;
         private final int FOOD_X_OFF = 6;
         private final int EMERALD_X_OFF = 39;
         private final int ITEM_Y_OFF = 2;
@@ -162,15 +162,11 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
 
         private final Font font;
 
-        public OfferListing(int x, int y, int index, Font font, SellingBinPrice price) {
+        public OfferListing(int x, int y, int index, Font font, SellingBinOffer offer) {
             super(x, y, OFFER_WIDTH, OFFER_HEIGHT, CommonComponents.EMPTY);
             this.index = index;
-            this.price = price;
+            this.offer = offer;
             this.font = font;
-        }
-
-        public int getIndex() {
-            return index;
         }
 
         @Override
@@ -181,10 +177,10 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
                     0, (float)ARROW_TEXTURE_X, (float)ARROW_TEXTURE_Y,
                     ARROW_TEXTURE_WIDTH, ARROW_TEXTURE_HEIGHT, BG_WIDTH, TEXTURE_HEIGHT);
 
-            ItemStack foodItem = this.price.getItem();
-            int price = this.price.getPrice();
-            ItemStack emeralds = new ItemStack(SellingBinItems.EMERALD_NUGGET_ITEM.get(), price);
-            emeralds.setCount(price);
+            ItemStack foodItem = this.offer.getItem();
+            int offer = this.offer.getOffer();
+            ItemStack emeralds = new ItemStack(SellingBinItems.EMERALD_NUGGET_ITEM.get(), offer);
+            emeralds.setCount(offer);
 
             gui.pose().pushPose();
             gui.pose().translate(0.0F, 0.0F, 100.0F);
@@ -200,13 +196,13 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
         public void renderToolTip(GuiGraphics gui, int x, int y) {
             if (this.isHovered) {
                 if (x < this.getX() + 20) {
-                    ItemStack item = this.price.getItem();
+                    ItemStack item = this.offer.getItem();
                     gui.renderTooltip(this.font, item, x, y);
                 }
 
                 if (x > this.getX() + EMERALD_X_OFF && x < this.getX() + EMERALD_X_OFF + 20) {
-                    int price = this.price.getPrice();
-                    gui.renderTooltip(this.font, new ItemStack(SellingBinItems.EMERALD_NUGGET_ITEM.get(), price), x, y);
+                    int offer = this.offer.getOffer();
+                    gui.renderTooltip(this.font, new ItemStack(SellingBinItems.EMERALD_NUGGET_ITEM.get(), offer), x, y);
                 }
             }
         }
@@ -217,14 +213,14 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
     }
 
     private boolean canScroll() {
-        return getNumPrices() > MAX_PRICE_BOXES;
+        return getNumOffers() > MAX_OFFER_BOXES;
     }
 
     @Override
     public boolean mouseScrolled(double p_94686_, double p_94687_, double p_94688_) {
-        int i = getNumPrices();
+        int i = getNumOffers();
         if (this.canScroll()) {
-            int j = i - MAX_PRICE_BOXES;
+            int j = i - MAX_OFFER_BOXES;
             this.scrollOff = Mth.clamp((int) ((double) this.scrollOff - p_94688_), 0, j);
         }
 
@@ -233,11 +229,11 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu> {
 
     @Override
     public boolean mouseDragged(double p_97752_, double p_97753_, int p_97754_, double p_97755_, double p_97756_) {
-        int i = getNumPrices();
+        int i = getNumOffers();
         if (this.isDragging) {
             int j = this.topPos + SCROLL_BAR_Y;
             int k = j + SCROLL_BAR_HEIGHT - 1;
-            int l = i - MAX_PRICE_BOXES;
+            int l = i - MAX_OFFER_BOXES;
             float f = ((float)p_97753_ - (float)j - ((float)SCROLL_BUTTON_HEIGHT) / 2.0F) / ((float)(k - j) - (float)SCROLL_BUTTON_HEIGHT);
             f = f * (float)l + 0.5F;
             this.scrollOff = Mth.clamp((int)f, 0, l);

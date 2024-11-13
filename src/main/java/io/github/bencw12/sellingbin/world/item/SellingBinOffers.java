@@ -10,34 +10,34 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class SellingBinPrices extends ArrayList<SellingBinPrice> {
+public class SellingBinOffers extends ArrayList<SellingBinOffer> {
 
-    private static final int NUM_PRICES = 15;
-    public static final SellingBinPrices PRICES = new SellingBinPrices();
+    private static final int NUM_OFFERS = 15;
+    public static final SellingBinOffers OFFERS = new SellingBinOffers();
 
-    public SellingBinPrices() {
+    public SellingBinOffers() {
         super();
     }
-    public SellingBinPrices(int n) {
+    public SellingBinOffers(int n) {
         super(n);
     }
 
-    public static int getPrice(ItemStack stack) {
+    public static int getEmeraldTotal(ItemStack stack) {
         if (stack.isEmpty()) {
             return 0;
         }
 
-        for (SellingBinPrice price : PRICES) {
-            if (price.getItem().getItem() == stack.getItem()) {
-                return price.getPrice() * stack.getCount();
+        for (SellingBinOffer offer : OFFERS) {
+            if (offer.getItem().getItem() == stack.getItem()) {
+                return offer.getOffer() * stack.getCount();
             }
         }
 
         return 0;
     }
 
-    public static void getNewPrices() {
-        PRICES.clear();
+    public static void getNewOffers() {
+        OFFERS.clear();
 
         // get all edible foods
         ArrayList<Item> foods = new ArrayList<>();
@@ -50,7 +50,7 @@ public class SellingBinPrices extends ArrayList<SellingBinPrice> {
 
         ArrayList<Integer> idxs = new ArrayList<>();
 
-        for (int i = 0; i < NUM_PRICES; ++i) {
+        for (int i = 0; i < NUM_OFFERS; ++i) {
             int rnd = ThreadLocalRandom.current().nextInt(0, foods.size());
             if (!idxs.contains(rnd)) {
                 idxs.add(rnd);
@@ -63,22 +63,22 @@ public class SellingBinPrices extends ArrayList<SellingBinPrice> {
             ItemStack item = new ItemStack(foods.get(i));
             // TODO make dynamic
             double multiplier = 0.5;
-            SellingBinPrice p = new SellingBinPrice(item, multiplier);
-            PRICES.add(p);
+            SellingBinOffer p = new SellingBinOffer(item, multiplier);
+            OFFERS.add(p);
         }
 
-        SellingBin.PRICES_SAVE.setDirty();
+        SellingBin.OFFERS_SAVE.setDirty();
     }
 
     public CompoundTag createTag(CompoundTag tag) {
         ListTag list = new ListTag();
 
         for (int i = 0; i < this.size(); i++) {
-            SellingBinPrice price = this.get(i);
-            list.add(price.createTag());
+            SellingBinOffer offer = this.get(i);
+            list.add(offer.createTag());
         }
 
-        tag.put("SellingBinPrices", list);
+        tag.put("SellingBinOffers", list);
         return tag;
     }
 }
