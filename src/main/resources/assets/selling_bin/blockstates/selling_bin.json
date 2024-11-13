@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "selling_bin:block/selling_bin"
+      }
+    }
+  ]
+}

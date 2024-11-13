@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "F F",
+    "F F",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "F": {
+      "tag": "minecraft:wooden_fences"
+    }
+  },
+  "result": {
+    "item": "selling_bin:selling_bin",
+    "count": 1
+  }
+}
