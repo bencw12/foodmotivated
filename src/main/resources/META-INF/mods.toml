@@ -15,17 +15,17 @@ license="GPL"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="selling_bin" #mandatory
+modId="foodmotivated" #mandatory
 # The version number of the mod
 version="1.0.0" #mandatory
 # A display name for the mod
-displayName="Selling Bin" #mandatory
+displayName="Food Motivated" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="selling_bin.png"
+logoFile= "../foodmotivated.png"
 # A text field displayed in the mod UI
 #credits="" #optional
 # A text field displayed in the mod UI
@@ -39,7 +39,7 @@ authors="Ben Holmes" #optional
 #displayTest="MATCH_VERSION" # MATCH_VERSION is the default if nothing is specified (#optional)
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''Sell your crops!'''
+description='''Mod to more directly motivate farming as a means of progression!'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 
 

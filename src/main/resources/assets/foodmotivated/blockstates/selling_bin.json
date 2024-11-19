@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "foodmotivated:block/selling_bin"
+      }
+    }
+  ]
+}
